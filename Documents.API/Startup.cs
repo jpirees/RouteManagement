@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Documents.API.Configuration;
-using Documents.API.Services;
+//using Documents.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -42,7 +42,7 @@ namespace Documents.API
             services.AddSingleton<IMongoDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
 
-            services.AddSingleton<DocumentsService>();
+            //services.AddSingleton<DocumentsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
