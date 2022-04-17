@@ -14,8 +14,6 @@ namespace RouteManagement.Controllers
 {
     public class PeopleController : Controller
     {
-        private readonly string baseUri = "https://localhost:44383/api/";
-
         public async Task<IActionResult> Index()
         {
             var people = await PeopleService.Get();
