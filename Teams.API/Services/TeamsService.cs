@@ -69,6 +69,40 @@ namespace Teams.API.Services
             return team;
         }
 
+        public async Task<Team> UpdateToInsert(string id, Person personIn)
+        {
+            var team = await GetById(id);
+
+            if (team == null)
+                return null;
+
+            var filter = Builders<Team>.Filter.Where(team => team.Id == id);
+            var update = Builders<Team>.Update.Push("People", personIn);
+
+            await PeopleAPIService.UpdateStatus(personIn.Id);
+
+            await _teams.UpdateOneAsync(filter, update);
+
+            return team;
+        }
+
+        public async Task<Team> UpdateToRemove(string id, Person personOut)
+        {
+            var team = await GetById(id);
+
+            if (team == null)
+                return null;
+
+            var filter = Builders<Team>.Filter.Where(team => team.Id == id);
+            var update = Builders<Team>.Update.Pull("People", personOut);
+
+            await PeopleAPIService.UpdateStatus(personOut.Id);
+
+            await _teams.UpdateOneAsync(filter, update);
+            
+            return team;
+        }
+
         public async Task<Team> Remove(string id)
         {
             var team = await GetById(id);

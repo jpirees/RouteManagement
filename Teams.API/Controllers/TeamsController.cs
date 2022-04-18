@@ -73,16 +73,55 @@ namespace Teams.API.Controllers
         [HttpPut("{id:length(24)}")]
         public async Task<dynamic> Update(string id, [FromBody] Team teamIn)
         {
-            var teamExist = await _teamsService.GetByName(teamIn.Name);
+            var team = await _teamsService.GetById(id);
 
-            if (teamExist != null)
-                return BadRequest(new
+            if (!team.Name.Equals(teamIn.Name))
+            {
+                var teamExist = await _teamsService.GetByName(teamIn.Name);
+
+                if (teamExist != null)
+                    return BadRequest(new
+                    {
+                        statusCode = 400,
+                        message = "Team name is already registered"
+                    });
+            }
+
+            teamIn.People = team.People;
+
+            var response = await _teamsService.Update(id, teamIn);
+
+            if (response == null)
+                return NotFound(new
                 {
-                    statusCode = 400,
-                    message = "Team name is already registered"
+                    statusCode = 404,
+                    message = "Team not found"
                 });
 
-            var team = await _teamsService.Update(id, teamIn);
+
+            return NoContent();
+        }
+
+
+        [HttpPut("{id:length(24)}/Status")]
+        public async Task<dynamic> UpdateStatus(string id)
+        {
+            var team = await _teamsService.UpdateStatus(id);
+
+            if (team == null)
+                return NotFound(new
+                {
+                    statusCode = 404,
+                    message = "Team not found"
+                });
+
+            return NoContent();
+        }
+
+        [HttpPut("{id:length(24)}/Insert")]
+        public async Task<dynamic> UpdateInsert(string id, [FromBody] Person person)
+        {
+            var team = await _teamsService.UpdateToInsert(id, person);
 
             if (team == null)
                 return NotFound(new
@@ -95,10 +134,10 @@ namespace Teams.API.Controllers
         }
 
 
-        [HttpPut("{id:length(24)}/Status")]
-        public async Task<dynamic> UpdateStatus(string id)
+        [HttpPut("{id:length(24)}/Remove")]
+        public async Task<dynamic> UpdateRemove(string id, [FromBody] Person person)
         {
-            var team = await _teamsService.UpdateStatus(id);
+            var team = await _teamsService.UpdateToRemove(id, person);
 
             if (team == null)
                 return NotFound(new
