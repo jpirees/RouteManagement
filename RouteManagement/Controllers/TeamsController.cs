@@ -2,77 +2,139 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RouteManagement.Models;
+using RouteManagement.Services;
 
 namespace RouteManagement.Controllers
 {
     public class TeamsController : Controller
     {
-        private readonly string baseUri = "https://localhost:44373/api/";
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<TeamViewModel> teams = null;
-
-            using (var httpClient = new HttpClient())
-            {
-                httpClient.BaseAddress = new Uri(baseUri);
-
-                var responseRequest = httpClient.GetAsync("Teams");
-                responseRequest.Wait();
-
-                var response = responseRequest.Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseBody = response.Content.ReadAsStringAsync().Result;
-
-                    teams = JsonConvert.DeserializeObject<IList<TeamViewModel>>(responseBody);
-                }
-                else
-                {
-                    teams = Enumerable.Empty<TeamViewModel>();
-                    ModelState.AddModelError(String.Empty, "Falha ao enviar requisição");
-                }
-            }
+            var teams = await TeamsService.Get();
 
             return View(teams);
         }
 
 
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
-            TeamViewModel team = null;
-
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction(nameof(Index));
 
-            using (var httpClient = new HttpClient())
+            var team = await TeamsService.Get(id);
+
+            return View(team);
+        }
+
+
+        public async Task<IActionResult> Create()
+        {
+            var people = await PeopleService.Get();
+
+            var peopleAvailable =
+                (from person in people
+                 where person.IsAvailable == true
+                 select person);
+
+            ViewBag.PeopleAvailable = peopleAvailable;
+
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(TeamViewModel team, IFormCollection form)
+        {
+            List<PersonViewModel> peopleSelected = new();
+
+            if (ModelState.IsValid)
             {
-                httpClient.BaseAddress = new Uri(baseUri);
-
-                var responseRequest = httpClient.GetAsync($"Teams/{id}");
-                responseRequest.Wait();
-
-                var response = responseRequest.Result;
-
-                if (response.IsSuccessStatusCode)
+                foreach (var person_id in Request.Form["checkPeopleTeam"].ToList())
                 {
-                    var responseBody = response.Content.ReadAsStringAsync().Result;
-
-                    team = JsonConvert.DeserializeObject<TeamViewModel>(responseBody);
-                }
-                else
-                {
-                    team = null;
-                    ModelState.AddModelError(String.Empty, "Falha ao enviar requisição");
+                    var person = await PeopleService.Get(person_id.ToString());
+                    peopleSelected.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable));
                 }
 
+                team.People = peopleSelected;
+
+                await TeamsService.Create(team);
+
+                return RedirectToAction(nameof(Index));
             }
 
             return View(team);
+        }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return RedirectToAction(nameof(Index));
+
+            var team = await TeamsService.Get(id);
+
+            var people = await PeopleService.Get();
+
+            var peopleAvailable =
+                (from person in people
+                 where person.IsAvailable == true
+                 select person);
+
+            List<PersonViewModel> peopleTeam = new();
+
+            foreach (var person in team.People)
+                peopleTeam.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable));
+
+            ViewBag.PeopleAvailable = peopleAvailable;
+            ViewBag.PeopleTeam = peopleTeam;
+
+            return View(team);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(string id, TeamViewModel team, IFormCollection form)
+        {
+            if (!id.Equals(team.Id))
+                return RedirectToAction(nameof(Index));
+
+            if (ModelState.IsValid)
+            {
+                foreach (var person_id in Request.Form["checkNewPeopleTeam"].ToList())
+                {
+                    var person = await PeopleService.Get(person_id.ToString());
+
+                    await TeamsService.UpdateInsert(id, person);
+                }
+
+                var response = await TeamsService.Update(id, team);
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction(nameof(Index));
+            }
+
+            return View(team);
+        }
+
+
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return RedirectToAction(nameof(Index));
+
+            var response = await TeamsService.Delete(id);
+
+            if (response.IsSuccessStatusCode)
+                return RedirectToAction(nameof(Index));
+
+            return View();
         }
     }
 }
