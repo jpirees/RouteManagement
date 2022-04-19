@@ -45,10 +45,3 @@
   Listagem das informações do arquivo (.xlsx)
 <li>
   Gerar documento Word (.doc) com os times e suas rotas
-
-<hr>
-
-OBS:
-  
-[Times] <br>
-Para remover pessoas do time, apague o time.
