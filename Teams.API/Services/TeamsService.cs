@@ -76,6 +76,8 @@ namespace Teams.API.Services
             if (team == null)
                 return null;
 
+            personIn.IsAvailable = false;
+
             var filter = Builders<Team>.Filter.Where(team => team.Id == id);
             var update = Builders<Team>.Update.Push("People", personIn);
 
