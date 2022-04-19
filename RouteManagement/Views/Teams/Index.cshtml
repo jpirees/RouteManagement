@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<RouteManagement.Models.TeamViewModel>
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Times";
 }
 
-<h1>Teams</h1>
+<h1>Times</h1>
 
 <p>
-	<a asp-action="Create">Create New</a>
+	<a asp-action="Create">Novo time</a>
 </p>
+
 <table class="table">
 	<thead>
 		<tr>
@@ -27,7 +28,6 @@
 			<th>
 				@Html.DisplayNameFor(model => model.IsAvailable)
 			</th>
-
 		</tr>
 	</thead>
 	<tbody>
@@ -55,9 +55,10 @@
 					@Html.DisplayFor(modelItem => item.IsAvailable)
 				</td>
 				<td>
-					@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-					@Html.ActionLink("Details", "Details", new { id = item.Id }) |
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id })
+					@Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+					@Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
+					@Html.ActionLink("Deletar", "Delete", new { id = item.Id }, 
+new { onclick = $"return confirm('Deseja realmente deletar o seguinte time: {item.Name} ?');" })
 				</td>
 			</tr>
 		}

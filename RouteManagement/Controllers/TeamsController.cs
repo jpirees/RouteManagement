@@ -22,7 +22,6 @@ namespace RouteManagement.Controllers
             return View(teams);
         }
 
-
         public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -33,21 +32,14 @@ namespace RouteManagement.Controllers
             return View(team);
         }
 
-
         public async Task<IActionResult> Create()
         {
-            var people = await PeopleService.Get();
-
-            var peopleAvailable =
-                (from person in people
-                 where person.IsAvailable == true
-                 select person);
+            IEnumerable<PersonViewModel> peopleAvailable = await GetPeopleAvailable();
 
             ViewBag.PeopleAvailable = peopleAvailable;
 
             return View();
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Create(TeamViewModel team, IFormCollection form)
@@ -56,6 +48,17 @@ namespace RouteManagement.Controllers
 
             if (ModelState.IsValid)
             {
+
+                if (Request.Form["checkPeopleTeam"].ToList().Count == 0)
+                {
+                    IEnumerable<PersonViewModel> peopleAvailable = await GetPeopleAvailable();
+
+                    ViewBag.PeopleAvailable = peopleAvailable;
+
+                    return View(team);
+                }
+
+
                 foreach (var person_id in Request.Form["checkPeopleTeam"].ToList())
                 {
                     var person = await PeopleService.Get(person_id.ToString());
@@ -97,7 +100,6 @@ namespace RouteManagement.Controllers
             return View(team);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Edit(string id, TeamViewModel team, IFormCollection form)
         {
@@ -106,12 +108,46 @@ namespace RouteManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                foreach (var person_id in Request.Form["checkNewPeopleTeam"].ToList())
-                {
-                    var person = await PeopleService.Get(person_id.ToString());
+                var peopleToAdd = Request.Form["checkPeopleAvailableToAdd"].ToList();
+                var peopleToRemove = Request.Form["checkPeopleTeamToRemove"].ToList();
 
-                    await TeamsService.UpdateInsert(id, person);
-                }
+
+                if (peopleToAdd.Count != 0)
+                    foreach (var person_id in Request.Form["checkPeopleAvailableToAdd"].ToList())
+                    {
+                        var person = await PeopleService.Get(person_id.ToString());
+
+                        await TeamsService.UpdateInsert(id, person);
+                    }
+
+                if (peopleToRemove.Count != 0)
+                    foreach (var person_id in Request.Form["checkPeopleTeamToRemove"].ToList())
+                    {
+                        var person = await PeopleService.Get(person_id.ToString());
+
+                        await TeamsService.UpdateRemove(id, person);
+                    }
+
+
+                if (peopleToRemove.Count == team.People.Count && peopleToAdd.Count == 0)
+				{
+                    var people = await PeopleService.Get();
+
+                    var peopleAvailable =
+                        (from person in people
+                         where person.IsAvailable == true
+                         select person);
+
+                    List<PersonViewModel> peopleTeam = new();
+
+                    foreach (var person in team.People)
+                        peopleTeam.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable));
+
+                    ViewBag.PeopleAvailable = peopleAvailable;
+                    ViewBag.PeopleTeam = peopleTeam;
+
+                    return View(team);
+				}
 
                 var response = await TeamsService.Update(id, team);
 
@@ -121,8 +157,6 @@ namespace RouteManagement.Controllers
 
             return View(team);
         }
-
-
 
         public async Task<IActionResult> Delete(string id)
         {
@@ -135,6 +169,20 @@ namespace RouteManagement.Controllers
                 return RedirectToAction(nameof(Index));
 
             return View();
+        }
+
+
+
+        private static async Task<IEnumerable<PersonViewModel>> GetPeopleAvailable()
+        {
+            var people = await PeopleService.Get();
+
+            var peopleAvailable =
+                (from person in people
+                 where person.IsAvailable == true
+                 select person);
+
+            return peopleAvailable;
         }
     }
 }

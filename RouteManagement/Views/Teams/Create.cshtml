@@ -4,9 +4,9 @@
 	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Novo</h1>
 
-<h4>Team</h4>
+<h4>Time</h4>
 <hr />
 <div class="row">
 	<div class="col-md-4">
@@ -35,7 +35,7 @@
 			</div>
 
 			<div class="form-group">
-				<label asp-for="People" class="control-label"></label><br />
+				<label asp-for="People" class="control-label">Pessoas Disponíveis:</label><br />
 				@foreach (var person in ViewBag.PeopleAvailable)
 				{
 					<input name="checkPeopleTeam" type="checkbox" value=@person.Id>
@@ -47,14 +47,14 @@
 			</div>
 
 			<div class="form-group">
-				<input type="submit" value="Create" class="btn btn-primary" />
+				<input type="submit" value="Criar Time" class="btn btn-primary" />
 			</div>
 		</form>
 	</div>
 </div>
 
 <div>
-	<a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Voltar</a>
 </div>
 
 @section Scripts {
