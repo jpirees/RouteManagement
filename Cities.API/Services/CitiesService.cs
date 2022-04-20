@@ -20,6 +20,7 @@ namespace Cities.API.Services
         public async Task<IEnumerable<City>> Get() =>
             await _cities.Find(city => true)
                          .SortBy(city => city.Name)
+                         .SortBy(city => city.State)
                          .ToListAsync<City>();
 
         public async Task<City> GetById(string id) =>
