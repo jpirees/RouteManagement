@@ -9,16 +9,11 @@ namespace RouteManagement.Models
         public string Id { get; set; }
 
         [Display(Name = "Nome")]
-        [Required]
+        [Required(ErrorMessage = "Campo obrigatório")]
         public string Name { get; set; }
 
-        [Display(Name = "Cidade")]
-        [Required]
-        public string City { get; set; }
-
-        [Display(Name = "Estado")]
-        [Required]
-        public string State { get; set; }
+        [Display(Name = "Cidade de Operação")]
+        public CityViewModel OperatingCity { get; set; }
 
         [Display(Name = "Time Disponível")]
         public bool IsAvailable { get; set; }

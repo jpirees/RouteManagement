@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using RouteManagement.Models;
 using RouteManagement.Services;
 
 namespace RouteManagement.Controllers
 {
-    public class PeopleController : Controller
+    public class CitiesController : Controller
     {
         public async Task<IActionResult> Index()
         {
-            var people = await PeopleService.Get();
+            var cities = await CitiesService.Get();
 
-            return View(people);
+            return View(cities);
         }
 
         public async Task<IActionResult> Details(string id)
@@ -26,9 +20,9 @@ namespace RouteManagement.Controllers
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction(nameof(Index));
 
-            var person = await PeopleService.Get(id);
+            var city = await CitiesService.Get(id);
 
-            return View(person);
+            return View(city);
         }
 
         public IActionResult Create()
@@ -37,16 +31,16 @@ namespace RouteManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name, IsAvailable")] PersonViewModel person)
+        public async Task<IActionResult> Create([Bind("Name,State")] CityViewModel city)
         {
             if (ModelState.IsValid)
             {
-                await PeopleService.Create(person);
+                await CitiesService.Create(city);
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(person);
+            return View(city);
         }
 
         public async Task<IActionResult> Edit(string id)
@@ -54,23 +48,26 @@ namespace RouteManagement.Controllers
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction(nameof(Index));
 
-            var person = await PeopleService.Get(id);
+            var person = await CitiesService.Get(id);
 
             return View(person);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,IsAvailable")] PersonViewModel person)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,State")] CityViewModel city)
         {
-            if (!id.Equals(person.Id))
-                return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                if (string.IsNullOrEmpty(city.Name) || string.IsNullOrEmpty(city.State))
+                    return View(city);
 
-            var response = await PeopleService.Update(id, person);
+                var response = await CitiesService.Update(id, city);
 
-            if (response.IsSuccessStatusCode)
-                return RedirectToAction(nameof(Index));
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction(nameof(Index));
+            }
 
-            return View(person);
+            return View(city);
         }
 
         public async Task<IActionResult> Delete(string id)
@@ -78,7 +75,7 @@ namespace RouteManagement.Controllers
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction(nameof(Index));
 
-            var response = await PeopleService.Delete(id);
+            var response = await CitiesService.Delete(id);
 
             if (response.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));

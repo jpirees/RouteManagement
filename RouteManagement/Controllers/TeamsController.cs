@@ -36,18 +36,28 @@ namespace RouteManagement.Controllers
         {
             IEnumerable<PersonViewModel> peopleAvailable = await GetPeopleAvailable();
 
+            IEnumerable<CityViewModel> cities = await CitiesService.Get();
+
             ViewBag.PeopleAvailable = peopleAvailable;
+            ViewBag.Cities = cities;
 
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TeamViewModel team)
+        public async Task<IActionResult> Create([Bind("Name, IsAvailable")] TeamViewModel team)
         {
             List<PersonViewModel> peopleSelected = new();
 
             if (ModelState.IsValid)
             {
+                var operatingCityId = Request.Form["OperatingCity"].FirstOrDefault();
+
+                var operatingCity = await CitiesService.Get(operatingCityId);
+
+                if (operatingCity == null)
+                    return RedirectToAction(nameof(Create));
+
                 if (Request.Form["checkPeopleTeam"].ToList().Count == 0)
                     return RedirectToAction(nameof(Create));
 
@@ -58,6 +68,7 @@ namespace RouteManagement.Controllers
                 }
 
                 team.People = peopleSelected;
+                team.OperatingCity = operatingCity;
 
                 await TeamsService.Create(team);
 
@@ -81,6 +92,11 @@ namespace RouteManagement.Controllers
                  where person.IsAvailable == true
                  select person);
 
+            IEnumerable<CityViewModel> cities = await CitiesService.Get();
+
+            ViewBag.PeopleAvailable = peopleAvailable;
+            ViewBag.Cities = cities;
+
             List<PersonViewModel> peopleTeam = new();
 
             foreach (var person in team.People)
@@ -95,38 +111,36 @@ namespace RouteManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(string id, TeamViewModel team)
         {
+            var operatingCity = await CitiesService.Get(team.OperatingCity.Id);
 
-            if (!id.Equals(team.Id))
+            if (operatingCity == null)
+                return RedirectToAction(nameof(Create));
+
+            team.OperatingCity = operatingCity;
+
+            var peopleToAdd = Request.Form["checkPeopleAvailableToAdd"].ToList();
+            var peopleToRemove = Request.Form["checkPeopleTeamToRemove"].ToList();
+
+            if (peopleToAdd.Count != 0)
+                foreach (var person_id in Request.Form["checkPeopleAvailableToAdd"].ToList())
+                {
+                    var person = await PeopleService.Get(person_id.ToString());
+
+                    await TeamsService.UpdateInsert(id, person);
+                }
+
+            if (peopleToRemove.Count != 0)
+                foreach (var person_id in Request.Form["checkPeopleTeamToRemove"].ToList())
+                {
+                    var person = await PeopleService.Get(person_id.ToString());
+
+                    await TeamsService.UpdateRemove(id, person);
+                }
+
+            var response = await TeamsService.Update(id, team);
+
+            if (response.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
-
-            if (ModelState.IsValid)
-            {
-                var peopleToAdd = Request.Form["checkPeopleAvailableToAdd"].ToList();
-                var peopleToRemove = Request.Form["checkPeopleTeamToRemove"].ToList();
-
-                var teamToUpdate = await TeamsService.Get(id);
-
-                if (peopleToAdd.Count != 0)
-                    foreach (var person_id in Request.Form["checkPeopleAvailableToAdd"].ToList())
-                    {
-                        var person = await PeopleService.Get(person_id.ToString());
-
-                        await TeamsService.UpdateInsert(id, person);
-                    }
-
-                if (peopleToRemove.Count != 0)
-                    foreach (var person_id in Request.Form["checkPeopleTeamToRemove"].ToList())
-                    {
-                        var person = await PeopleService.Get(person_id.ToString());
-
-                        await TeamsService.UpdateRemove(id, person);
-                    }
-
-                var response = await TeamsService.Update(id, team);
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction(nameof(Index));
-            }
 
             return View(team);
         }

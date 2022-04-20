@@ -1,7 +1,7 @@
 ﻿@model RouteManagement.Models.TeamViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
 <h1>Editar</h1>
@@ -9,34 +9,31 @@
 <h4>Time</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-           
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control"  />
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="State" class="control-label"></label>
-                <input asp-for="State" class="form-control" />
-                <span asp-validation-for="State" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
-                </label>
-            </div>
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="People" class="control-label">Pessoas Disponíveis:</label><br />
-                @foreach (var person in ViewBag.PeopleAvailable)
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="OperatingCity" class="control-label"></label><br />
+				<select asp-for="OperatingCity.Id" asp-items="@(new SelectList(ViewBag.Cities,"Id","CityState"))" class="form-control"></select>
+			</div>
+
+
+			<div class="form-group form-check">
+				<label class="form-check-label">
+					<input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
+				</label>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="People" class="control-label">Pessoas Disponíveis:</label><br />
+				@foreach (var person in ViewBag.PeopleAvailable)
 				{
 					<input name="checkPeopleAvailableToAdd" type="checkbox" value=@person.Id>
 
@@ -44,8 +41,8 @@
 
 					<br />
 				}
-                <label asp-for="People" class="control-label">Integrantes: (Selecione para remover)</label><br />
-                @foreach (var person in ViewBag.PeopleTeam)
+				<label asp-for="People" class="control-label">Integrantes: (Selecione para remover)</label><br />
+				@foreach (var person in ViewBag.PeopleTeam)
 				{
 					<input name="checkPeopleTeamToRemove" type="checkbox" value=@person.Id />
 
@@ -55,17 +52,19 @@
 				}
 			</div>
 
-            <div class="form-group">
-                <input type="submit" value="Salvar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+			<div class="form-group">
+				<input type="submit" value="Salvar" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Voltar</a>
+	<a asp-action="Index">Voltar</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
