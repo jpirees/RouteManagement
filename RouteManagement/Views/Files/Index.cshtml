@@ -1,266 +1,58 @@
-﻿@model IEnumerable<RouteManagement.Models.FileViewModel>
+﻿@*@model IEnumerable<RouteManagement.Models.FileViewModel>*@
+
+@model string[]
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Rotas";
+
+	List<string> headers = ViewBag.Headers;
+
+	string[] services = new string[]
+			{
+		"INSTALAÇÃO",
+		"MUDANÇA DE ENDEREÇO",
+		"MUDANÇA DE LOCAL",
+		"REFAZER MANUTENÇÃO",
+		"REINSTALAÇÃO",
+		"RETORNO CREDENCIADA",
+		"SEM SINAL",
+		"TROCA DE TERMINAL",
+		"VISITA TÉCNICA"
+			};
 }
 
-<h1>Routes</h1>
+<h1>Rotas</h1>
 
-<p>
-    <a asp-action="Upload">Upload File</a>
-</p>
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+			<div class="form-group">
+				<h5>Escolha o Serviço</h5>
+				<select name="routesServices" id="routesServices">
+					@foreach (string service in services)
+					{
+						<option value="@service">@service</option>
+					}
+				</select>
+			</div>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.Data)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Status)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auditado)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CopReverteu)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Log)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Pdf)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Foto)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Contrato)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Wo)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Os)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Assinante)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Tecnicos)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Login)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Matricula)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Cop)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.UltimoAlterar)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Local)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.PontoCasaApt)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Cidade)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Base)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Horario)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Segmento)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Servico)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.TipoDeServico)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.TipoOs)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.GrupoDeServico)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Endereco)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Numero)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Complemento)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Cep)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Node)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Bairro)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Pacote)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Cod)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Telefone1)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Telefone2)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Obs)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.ObsTecnico)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Equipamento)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Data)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Status)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Auditado)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.CopReverteu)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Log)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Pdf)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Foto)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Contrato)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Wo)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Os)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Assinante)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Tecnicos)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Login)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Matricula)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Cop)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.UltimoAlterar)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Local)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.PontoCasaApt)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Cidade)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Base)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Horario)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Segmento)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Servico)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.TipoDeServico)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.TipoOs)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.GrupoDeServico)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Endereco)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Numero)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Complemento)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Cep)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Node)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Bairro)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Pacote)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Cod)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Telefone1)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Telefone2)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Obs)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.ObsTecnico)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Equipamento)
-				</td>
-				<td>
-					@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-					@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-					@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+			<div class="form-group">
+				<label class="control-label">Selecione os dados: </label><br />
+				@foreach (var item in headers)
+				{
+					<input name="checkData" type="checkbox" value=@item.ToString()>
+
+					<label for="@item.ToString()"> @item.ToString()</label>
+
+					<br />
+				}
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Gerar Documento" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
