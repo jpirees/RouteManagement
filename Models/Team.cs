@@ -23,12 +23,8 @@ namespace Models
         public bool IsAvailable { get; set; }
 
         [BsonRequired]
-        [JsonProperty("State")]
-        public string State { get; set; }
-
-        [BsonRequired]
-        [JsonProperty("City")]
-        public string City { get; set; }
+        [JsonProperty("OperatingCity")]
+        public City OperatingCity { get; set; }
         
     }
 
