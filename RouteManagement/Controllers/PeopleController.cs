@@ -21,7 +21,6 @@ namespace RouteManagement.Controllers
             return View(people);
         }
 
-
         public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -31,7 +30,6 @@ namespace RouteManagement.Controllers
 
             return View(person);
         }
-
 
         public async Task<IActionResult> Create(PersonViewModel person)
         {
@@ -43,7 +41,6 @@ namespace RouteManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -53,7 +50,6 @@ namespace RouteManagement.Controllers
 
             return View(person);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Name,IsAvailable")] PersonViewModel person)
@@ -68,7 +64,6 @@ namespace RouteManagement.Controllers
 
             return View(person);
         }
-
 
         public async Task<IActionResult> Delete(string id)
         {

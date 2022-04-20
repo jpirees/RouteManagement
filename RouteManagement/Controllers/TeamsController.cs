@@ -42,22 +42,14 @@ namespace RouteManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TeamViewModel team, IFormCollection form)
+        public async Task<IActionResult> Create(TeamViewModel team)
         {
             List<PersonViewModel> peopleSelected = new();
 
             if (ModelState.IsValid)
             {
-
                 if (Request.Form["checkPeopleTeam"].ToList().Count == 0)
-                {
-                    IEnumerable<PersonViewModel> peopleAvailable = await GetPeopleAvailable();
-
-                    ViewBag.PeopleAvailable = peopleAvailable;
-
-                    return View(team);
-                }
-
+                    return RedirectToAction(nameof(Create));
 
                 foreach (var person_id in Request.Form["checkPeopleTeam"].ToList())
                 {
@@ -101,8 +93,9 @@ namespace RouteManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id, TeamViewModel team, IFormCollection form)
+        public async Task<IActionResult> Edit(string id, TeamViewModel team)
         {
+
             if (!id.Equals(team.Id))
                 return RedirectToAction(nameof(Index));
 
@@ -111,6 +104,7 @@ namespace RouteManagement.Controllers
                 var peopleToAdd = Request.Form["checkPeopleAvailableToAdd"].ToList();
                 var peopleToRemove = Request.Form["checkPeopleTeamToRemove"].ToList();
 
+                var teamToUpdate = await TeamsService.Get(id);
 
                 if (peopleToAdd.Count != 0)
                     foreach (var person_id in Request.Form["checkPeopleAvailableToAdd"].ToList())
@@ -127,27 +121,6 @@ namespace RouteManagement.Controllers
 
                         await TeamsService.UpdateRemove(id, person);
                     }
-
-
-                if (peopleToRemove.Count == team.People.Count && peopleToAdd.Count == 0)
-				{
-                    var people = await PeopleService.Get();
-
-                    var peopleAvailable =
-                        (from person in people
-                         where person.IsAvailable == true
-                         select person);
-
-                    List<PersonViewModel> peopleTeam = new();
-
-                    foreach (var person in team.People)
-                        peopleTeam.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable));
-
-                    ViewBag.PeopleAvailable = peopleAvailable;
-                    ViewBag.PeopleTeam = peopleTeam;
-
-                    return View(team);
-				}
 
                 var response = await TeamsService.Update(id, team);
 
