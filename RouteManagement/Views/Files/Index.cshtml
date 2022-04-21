@@ -5,10 +5,8 @@
 @{
 	ViewData["Title"] = "Rotas";
 
-	List<string> headers = ViewBag.Headers;
-
 	string[] services = new string[]
-			{
+							{
 		"INSTALAÇÃO",
 		"MUDANÇA DE ENDEREÇO",
 		"MUDANÇA DE LOCAL",
@@ -17,8 +15,8 @@
 		"RETORNO CREDENCIADA",
 		"SEM SINAL",
 		"TROCA DE TERMINAL",
-		"VISITA TÉCNICA"
-			};
+		"VISITA TECNICA"
+				};
 }
 
 <h1>Rotas</h1>
@@ -29,18 +27,20 @@
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 			<div class="form-group">
-				<h5>Escolha o Serviço</h5>
-				<select name="routesServices" id="routesServices">
-					@foreach (string service in services)
-					{
-						<option value="@service">@service</option>
-					}
-				</select>
+				<label class="control-label"> Times Disponíveis:</label><br />
+				@foreach (var team in ViewBag.TeamsAvailable)
+				{
+					<input name="checkTeams" type="checkbox" value=@team.Id>
+
+					<label for="@team.Name"> @team.Name</label>
+
+					<br />
+				}
 			</div>
 
 			<div class="form-group">
 				<label class="control-label">Selecione os dados: </label><br />
-				@foreach (var item in headers)
+				@foreach (var item in ViewBag.Headers)
 				{
 					<input name="checkData" type="checkbox" value=@item.ToString()>
 

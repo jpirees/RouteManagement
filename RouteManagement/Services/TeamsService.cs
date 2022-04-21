@@ -65,6 +65,32 @@ namespace RouteManagement.Services
         }
 
 
+        public static async Task<List<TeamViewModel>> GetTeamsByCity(string cityId)
+        {
+            List<TeamViewModel> teams = null;
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(baseUri);
+
+                var response = await httpClient.GetAsync($"Teams/City/{cityId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = response.Content.ReadAsStringAsync().Result;
+
+                    teams = JsonConvert.DeserializeObject<List<TeamViewModel>>(responseBody);
+                }
+                else
+                {
+                    teams = new List<TeamViewModel>();
+                }
+            }
+
+            return teams;
+        }
+
+
         public static async Task Create(TeamViewModel team)
         {
             using (var httpClient = new HttpClient())

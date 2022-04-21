@@ -1,0 +1,66 @@
+﻿@model string[]
+
+@{
+	ViewData["Title"] = "Rotas";
+
+	string[] services = new string[]
+							{
+		"INSTALAÇÃO",
+		"MUDANÇA DE ENDEREÇO",
+		"MUDANÇA DE LOCAL",
+		"REFAZER MANUTENÇÃO",
+		"REINSTALAÇÃO",
+		"RETORNO CREDENCIADA",
+		"SEM SINAL",
+		"TROCA DE TERMINAL",
+		"VISITA TÉCNICA"
+				};
+}
+
+<h1>Rotas</h1>
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="GetTeamsByOperatingCity">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label class="control-label">Tipos de Serviços:</label><br />
+				<select asp-items="@(new SelectList(services, @services))" class="form-control" name="serviceName" id="serviceName" onchange="getService()">
+					<option value="default">SELECIONE UM SERVIÇO</option>
+				</select>
+			</div>
+
+			<div class="form-group" id="citiesList" style="display:none;">
+				<label class="control-label">Cidade de Operação:</label><br />
+				<select asp-items="@(new SelectList(ViewBag.Cities,"Id", "CityState"))" class="form-control" name="OperatingCity" id="OperatingCity" onchange="getOperatingCity()">
+					<option value="default">SELECIONE UMA CIDADE</option>
+				</select>
+			</div>
+					
+			<div class="form-group">
+				<input type="submit" value="Próximo" class="btn btn-primary" id="btnNext" disabled/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+	getService = () => {
+		let serviceSelected = document.querySelector('#serviceName').value;
+
+		if(serviceSelected != "default")
+			document.querySelector("#citiesList").style.display = "block";
+	}
+
+
+	getOperatingCity = () => {
+		let operatingCitySelected = document.querySelector('#OperatingCity').value;
+
+		if(operatingCitySelected !== "default")
+			document.querySelector("#btnNext").disabled = false;
+		}
+
+</script>
