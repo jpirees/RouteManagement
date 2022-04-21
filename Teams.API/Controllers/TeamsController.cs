@@ -51,6 +51,9 @@ namespace Teams.API.Controllers
             return team;
         }
 
+        [HttpGet("City/{cityId:length(24)}")]
+        public async Task<IEnumerable<Team>> GetTeamsByCity(string cityId) =>
+           await _teamsService.GetTeamsByCity(cityId);
 
         [HttpPost]
         public async Task<dynamic> Post([FromBody] Team teamIn)

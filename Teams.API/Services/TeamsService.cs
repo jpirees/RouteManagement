@@ -30,6 +30,11 @@ namespace Teams.API.Services
             await _teams.Find(team => team.Name.ToLower() == name.ToLower())
                         .FirstOrDefaultAsync<Team>();
 
+        public async Task<List<Team>> GetTeamsByCity(string cityId) =>
+            await _teams.Find(team => team.OperatingCity.Id == cityId)
+                        .SortBy(team => team.Name)
+                        .ToListAsync<Team>();
+
         public async Task<Team> Create(Team teamIn)
         {
             foreach (var person in teamIn.People)
@@ -101,7 +106,7 @@ namespace Teams.API.Services
             await PeopleAPIService.UpdateStatus(personOut.Id);
 
             await _teams.UpdateOneAsync(filter, update);
-            
+
             return team;
         }
 
