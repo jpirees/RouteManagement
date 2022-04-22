@@ -15,7 +15,7 @@ namespace RouteManagement.Services
 
         public static async Task<List<CityViewModel>> Get()
         {
-            List<CityViewModel> people = null;
+            List<CityViewModel> cities = null;
 
             using (var httpClient = new HttpClient())
             {
@@ -27,20 +27,20 @@ namespace RouteManagement.Services
                 {
                     var responseBody = response.Content.ReadAsStringAsync().Result;
 
-                    people = JsonConvert.DeserializeObject<List<CityViewModel>>(responseBody);
+                    cities = JsonConvert.DeserializeObject<List<CityViewModel>>(responseBody);
                 }
                 else
                 {
-                    people = new List<CityViewModel>();
+                    cities = new List<CityViewModel>();
                 }
             }
 
-            return people;
+            return cities;
         }
 
         public static async Task<CityViewModel> Get(string id)
         {
-            CityViewModel people = null;
+            CityViewModel city = null;
 
             using (var httpClient = new HttpClient())
             {
@@ -52,17 +52,40 @@ namespace RouteManagement.Services
                 {
                     var responseBody = response.Content.ReadAsStringAsync().Result;
 
-                    people = JsonConvert.DeserializeObject<CityViewModel>(responseBody);
+                    city = JsonConvert.DeserializeObject<CityViewModel>(responseBody);
                 }
                 else
                 {
-                    people = new CityViewModel();
+                    city = new CityViewModel();
                 }
             }
 
-            return people;
+            return city;
         }
+        public static async Task<CityViewModel> GetByName(string name)
+        {
+            CityViewModel city = null;
 
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(baseUri);
+
+                var response = await httpClient.GetAsync($"Cities/{name}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = response.Content.ReadAsStringAsync().Result;
+
+                    city = JsonConvert.DeserializeObject<CityViewModel>(responseBody);
+                }
+                else
+                {
+                    city = new CityViewModel();
+                }
+            }
+
+            return city;
+        }
 
         public static async Task Create(CityViewModel city)
         {

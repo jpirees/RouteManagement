@@ -4,22 +4,14 @@
 
 @{
 	ViewData["Title"] = "Rotas";
-
-	string[] services = new string[]
-							{
-		"INSTALAÇÃO",
-		"MUDANÇA DE ENDEREÇO",
-		"MUDANÇA DE LOCAL",
-		"REFAZER MANUTENÇÃO",
-		"REINSTALAÇÃO",
-		"RETORNO CREDENCIADA",
-		"SEM SINAL",
-		"TROCA DE TERMINAL",
-		"VISITA TECNICA"
-				};
+	int i = 0;
 }
 
 <h1>Rotas</h1>
+
+<p>
+	@Html.ActionLink("Voltar", "OperatingCity", "Files")
+</p>
 
 <div class="row">
 	<div class="col-md-4">
@@ -28,30 +20,35 @@
 
 			<div class="form-group">
 				<label class="control-label"> Times Disponíveis:</label><br />
+
 				@foreach (var team in ViewBag.TeamsAvailable)
 				{
-					<input name="checkTeams" type="checkbox" value=@team.Id>
+					<input name="checkTeams" type="checkbox" value=@team.Id id="teamsAvailable"/>
 
 					<label for="@team.Name"> @team.Name</label>
 
 					<br />
 				}
+
 			</div>
 
 			<div class="form-group">
 				<label class="control-label">Selecione os dados: </label><br />
+
 				@foreach (var item in ViewBag.Headers)
 				{
-					<input name="checkData" type="checkbox" value=@item.ToString()>
+					<input name="checkData" type="checkbox" value=@i id="dataOptions"/>
 
 					<label for="@item.ToString()"> @item.ToString()</label>
 
 					<br />
+
+					i++;
 				}
 			</div>
 
 			<div class="form-group">
-				<input type="submit" value="Gerar Documento" class="btn btn-primary" />
+				<input type="submit" value="Gerar Documento" class="btn btn-primary" onclick="GenerateDocument()"/>
 			</div>
 		</form>
 	</div>

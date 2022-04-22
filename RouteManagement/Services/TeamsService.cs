@@ -12,7 +12,7 @@ namespace RouteManagement.Services
     public class TeamsService
     {
         readonly static string baseUri = "https://localhost:44373/api/";
-
+        
         public static async Task<List<TeamViewModel>> Get()
         {
             List<TeamViewModel> teams = null;
@@ -38,10 +38,9 @@ namespace RouteManagement.Services
             return teams;
         }
 
-
         public static async Task<TeamViewModel> Get(string id)
         {
-            TeamViewModel teams = null;
+            TeamViewModel team = null;
 
             using (var httpClient = new HttpClient())
             {
@@ -53,17 +52,16 @@ namespace RouteManagement.Services
                 {
                     var responseBody = response.Content.ReadAsStringAsync().Result;
 
-                    teams = JsonConvert.DeserializeObject<TeamViewModel>(responseBody);
+                    team = JsonConvert.DeserializeObject<TeamViewModel>(responseBody);
                 }
                 else
                 {
-                    teams = new TeamViewModel();
+                    team = new TeamViewModel();
                 }
             }
 
-            return teams;
+            return team;
         }
-
 
         public static async Task<List<TeamViewModel>> GetTeamsByCity(string cityId)
         {
@@ -90,7 +88,6 @@ namespace RouteManagement.Services
             return teams;
         }
 
-
         public static async Task Create(TeamViewModel team)
         {
             using (var httpClient = new HttpClient())
@@ -103,7 +100,6 @@ namespace RouteManagement.Services
                 await httpClient.PostAsJsonAsync("Teams", team);
             }
         }
-
 
         public static async Task<HttpResponseMessage> Update(string id, TeamViewModel team)
         {
@@ -130,7 +126,6 @@ namespace RouteManagement.Services
                 return await httpClient.PutAsJsonAsync($"Teams/{id}/Insert", person);
             }
         }
-
         public static async Task<HttpResponseMessage> UpdateRemove(string id, PersonViewModel person)
         {
             using (var httpClient = new HttpClient())
@@ -143,7 +138,7 @@ namespace RouteManagement.Services
                 return await httpClient.PutAsJsonAsync($"Teams/{id}/Remove", person);
             }
         }
-
+        
         public static async Task<HttpResponseMessage> Delete(string id)
         {
             using (var httpClient = new HttpClient())

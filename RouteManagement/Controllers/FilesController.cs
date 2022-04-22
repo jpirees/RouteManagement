@@ -17,7 +17,7 @@ namespace RouteManagement.Controllers
     public class FilesController : Controller
     {
         public static List<List<string>> routes = new();
-        public static readonly List<string> headers = new();
+        public static List<string> headers = new();
         public static string serviceName;
         public static string cityId;
 
@@ -25,13 +25,15 @@ namespace RouteManagement.Controllers
         {
             return View();
         }
-
         public IActionResult UploadFile()
         {
             var files = HttpContext.Request.Form.Files;
 
             if (files.Count > 0)
             {
+                List<List<string>> routesFromExcel = new();
+                List<string> headersFromExcel = new();
+
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using ExcelPackage package = new(files[0].OpenReadStream());
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
@@ -41,30 +43,31 @@ namespace RouteManagement.Controllers
 
                 int columnCep = 0;
 
-                for (var column = 1; column <= columnCount; column++)
+                for (var column = 1; column < columnCount; column++)
                 {
-                    headers.Add(worksheet.Cells[1, column].Value.ToString());
+                    headersFromExcel.Add(worksheet.Cells[1, column].Value.ToString());
 
                     if (worksheet.Cells[1, column].Value.ToString().ToUpper().Equals("CEP"))
                         columnCep = column - 1;
                 }
 
+                headers = headersFromExcel;
+
                 worksheet.Cells[2, 1, rowCount, columnCount].Sort(columnCep, false);
 
-                package.Save();
-
-                List<string> columnContent = new();
-
-                for (var row = 2; row < rowCount; row++)
+                for (var row = 1; row < rowCount; row++)
                 {
-                    for (var column = 2; column < columnCount; column++)
+                    List<string> rowContent = new();
+                    for (var column = 1; column < columnCount; column++)
                     {
                         var content = worksheet.Cells[row, column].Value?.ToString() ?? "";
-                        columnContent.Add(content.ToString());
+                        rowContent.Add(content.ToString());
                     }
 
-                    routes.Add(columnContent);
+                    routesFromExcel.Add(rowContent);
                 }
+
+                routes = routesFromExcel;
 
                 return RedirectToAction(nameof(OperatingCity));
             }
@@ -75,6 +78,7 @@ namespace RouteManagement.Controllers
         public async Task<IActionResult> OperatingCity()
         {
             IEnumerable<CityViewModel> cities = await CitiesService.Get();
+
             ViewBag.Cities = cities;
 
             return View();
@@ -88,7 +92,6 @@ namespace RouteManagement.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
 
         public async Task<IActionResult> Index()
         {
@@ -106,18 +109,28 @@ namespace RouteManagement.Controllers
         }
 
 
+        public async Task<IActionResult> Create()
+        {
+            var teamsOptionsSelected = Request.Form["checkTeams"].ToList();
+            var dataOptionsSelected = Request.Form["checkData"].ToList();
 
+            if (teamsOptionsSelected.Count == 0 || dataOptionsSelected.Count == 0)
+                return RedirectToAction(nameof(Index));
 
+            List<TeamViewModel> teamsSelected = new();
 
+            foreach (var teamId in teamsOptionsSelected)
+            {
+                var team = await TeamsService.Get(teamId);
+                teamsSelected.Add(team);
+            }
 
+            var citySelected = await CitiesService.Get(cityId);
 
+            await GenerateDoc.Write(routes, dataOptionsSelected, teamsSelected, serviceName, citySelected);
 
-
-
-
-
-
-
+            return View();
+        }
 
 
     }
