@@ -35,6 +35,13 @@ namespace RouteManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                var cityExist = await CitiesService.GetByName(city.Name);
+
+                if (cityExist.Id != null)
+                    return View(city);
+
+                city.Name = city.Name.ToUpper();
+
                 await CitiesService.Create(city);
 
                 return RedirectToAction(nameof(Index));
