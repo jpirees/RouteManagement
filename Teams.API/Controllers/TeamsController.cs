@@ -88,11 +88,17 @@ namespace Teams.API.Controllers
                         statusCode = 400,
                         message = "Team name is already registered"
                     });
+
+                team.Name = teamIn.Name;
             }
 
-            teamIn.People = team.People;
+            if(!team.OperatingCity.Id.Equals(teamIn.OperatingCity.Id))
+                team.OperatingCity = teamIn.OperatingCity;
 
-            var response = await _teamsService.Update(id, teamIn);
+            if(!team.IsAvailable.Equals(teamIn.IsAvailable))
+                team.IsAvailable = teamIn.IsAvailable;
+
+            var response = await _teamsService.Update(id, team);
 
             if (response == null)
                 return NotFound(new
