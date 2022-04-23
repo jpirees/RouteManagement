@@ -29,7 +29,8 @@ namespace RoutesManagement.Services
 
             var indexGeneral = 0;
 
-            var filename = $@"C:\Users\Junior\Desktop\Rota-{seviceSelected}-{citySelected.Name}-{DateTime.Now:dd-MM-yyyy}.docx";
+            var user = System.Environment.UserName;
+            var filename = $@"C:\Users\{user}\Desktop\Rota-{seviceSelected}-{citySelected.Name}-{DateTime.Now:dd-MM-yyyy}.docx";
 
             using (FileStream fileStream = new(filename, FileMode.CreateNew))
             {
