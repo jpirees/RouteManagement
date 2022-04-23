@@ -129,12 +129,22 @@ namespace RouteManagement.Controllers
                     await TeamsService.UpdateInsert(id, person);
                 }
 
-            if (peopleToRemove.Count != 0)
-                foreach (var person_id in Request.Form["checkPeopleTeamToRemove"].ToList())
-                {
-                    var person = await PeopleService.Get(person_id.ToString());
+            team = await TeamsService.Get(team.Id);
 
-                    await TeamsService.UpdateRemove(id, person);
+            if (peopleToRemove.Count != 0)
+                if (peopleToRemove.Count == team.People.Count)
+                {
+                    await TeamsService.Delete(team.Id);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    foreach (var person_id in Request.Form["checkPeopleTeamToRemove"].ToList())
+                    {
+                        var person = await PeopleService.Get(person_id.ToString());
+
+                        await TeamsService.UpdateRemove(id, person);
+                    }
                 }
 
             var response = await TeamsService.Update(id, team);
@@ -157,8 +167,6 @@ namespace RouteManagement.Controllers
 
             return View();
         }
-
-
 
         private static async Task<IEnumerable<PersonViewModel>> GetPeopleAvailable()
         {
