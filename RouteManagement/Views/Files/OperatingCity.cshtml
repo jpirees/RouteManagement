@@ -2,20 +2,6 @@
 
 @{
 	ViewData["Title"] = "Rotas";
-
-	string[] services = new string[]
-	{
-		"INSTALAÇÃO",
-		"MANUTENÇÃO",
-		"MUDANÇA DE ENDEREÇO",
-		"MUDANÇA DE LOCAL",
-		"REFAZER MANUTENÇÃO",
-		"REINSTALAÇÃO",
-		"RETORNO CREDENCIADA",
-		"SEM SINAL",
-		"TROCA DE TERMINAL",
-		"VISITA TECNICA"
-		};
 }
 
 <h1>Rotas</h1>
@@ -27,7 +13,7 @@
 
 			<div class="form-group">
 				<label class="control-label">Tipos de Serviços:</label><br />
-				<select asp-items="@(new SelectList(services, @services))" class="form-control" name="serviceName" id="serviceName" onchange="getService()">
+				<select asp-items="@(new SelectList(ViewBag.Services, @ViewBag.Services))" class="form-control" name="serviceName" id="serviceName" onchange="getService()">
 					<option value="default">SELECIONE UM SERVIÇO</option>
 				</select>
 			</div>
@@ -60,7 +46,7 @@
 	getOperatingCity = () => {
 		let operatingCitySelected = document.querySelector('#OperatingCity').value;
 
-		if(operatingCitySelected !== "default")
+		if(operatingCitySelected != "default")
 			document.querySelector("#btnNext").disabled = false;
 		}
 

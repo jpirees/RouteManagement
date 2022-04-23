@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using RouteManagement.Models;
 
@@ -28,37 +29,47 @@ namespace RouteManagement.Services
 
             var indexGeneral = 0;
 
-            await using (StreamWriter sw = new($@"C:\Users\Junior\Desktop\Rota-{seviceSelected}-{DateTime.Now:dd-MM-yyyy}.docx"))
+            var filename = $@"C:\Users\Junior\Desktop\Rota-{seviceSelected}-{DateTime.Now:dd-MM-yyyy}.docx";
+
+            using (FileStream fileStream = new(filename, FileMode.CreateNew))
             {
-                sw.WriteLine($"{seviceSelected} - {DateTime.Now:dd/MM/yyyy}\n{citySelected.Name}\n\n");
-
-                foreach (var team in teamsSelected)
+                await using (StreamWriter sw = new(fileStream, Encoding.UTF8))
                 {
-                    sw.WriteLine("Equipe: " + team.Name + "\nRotas:\n");
+                    sw.WriteLine($"{seviceSelected} - {DateTime.Now:dd/MM/yyyy}\n{citySelected.Name}\n\n");
 
-                    for (int i = 0; i < division; i++)
+                    foreach (var team in teamsSelected)
                     {
-                        if (i == 0 && restDivision > 0)
-                            division++;
+                        sw.WriteLine("Equipe: " + team.Name + "\nRotas:\n");
 
-                        if (i == 0)
-                            restDivision--;
+                        for (int i = 0; i < division; i++)
+                        {
+                            if (i == 0 && restDivision > 0)
+                                division++;
 
-                        foreach (var index in dataOptionsSelected)
-                            sw.WriteLine($"{allColumns[int.Parse(index)]}: {routes[i + indexGeneral][int.Parse(index)]}");
+                            if (i == 0)
+                                restDivision--;
 
-                        if ((i + 1) >= division)
-                            indexGeneral += 1 + i;
+                            foreach (var index in dataOptionsSelected)
+                                sw.WriteLine($"{allColumns[int.Parse(index)]}: {routes[i + indexGeneral][int.Parse(index)]}");
 
-                        sw.WriteLine("\n");
+                            if ((i + 1) >= division)
+                                indexGeneral += 1 + i;
+
+                            sw.WriteLine("\n");
+                        }
+
+                        if (restDivision >= 0)
+                            division--;
+
+                        sw.WriteLine("--------------------------------------------------------------");
                     }
 
-                    if (restDivision >= 0)
-                        division--;
-
-                    sw.WriteLine("--------------------------------------------------------------");
+                    sw.Close();
                 }
+
+                fileStream.Close();
             }
+
         }
     }
 }
