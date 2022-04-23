@@ -18,6 +18,7 @@ namespace RouteManagement.Controllers
     {
         public static List<List<string>> routes = new();
         public static List<string> headers = new();
+        public static List<string> services = new();
         public static string serviceName;
         public static string cityId;
 
@@ -42,6 +43,7 @@ namespace RouteManagement.Controllers
                 var rowCount = worksheet.Dimension.End.Row;
 
                 int columnCep = 0;
+                int columnService = 0;
 
                 for (var column = 1; column < columnCount; column++)
                 {
@@ -49,23 +51,34 @@ namespace RouteManagement.Controllers
 
                     if (worksheet.Cells[1, column].Value.ToString().ToUpper().Equals("CEP"))
                         columnCep = column - 1;
+
+                    if (worksheet.Cells[1, column].Value.ToString().ToUpper().Equals("SERVIÇO"))
+                        columnService = column;
                 }
 
                 headers = headersFromExcel;
 
                 worksheet.Cells[2, 1, rowCount, columnCount].Sort(columnCep, false);
 
+                List<string> servicesRaw = new();
+
                 for (var row = 1; row < rowCount; row++)
                 {
                     List<string> rowContent = new();
+
                     for (var column = 1; column < columnCount; column++)
                     {
+                        servicesRaw.Add(worksheet.Cells[row, columnService].Value.ToString().ToUpper());
+
                         var content = worksheet.Cells[row, column].Value?.ToString() ?? "";
                         rowContent.Add(content.ToString());
                     }
 
                     routesFromExcel.Add(rowContent);
                 }
+
+                services = servicesRaw.Distinct().ToList();
+                services.RemoveAt(0);
 
                 routes = routesFromExcel;
 
@@ -80,6 +93,7 @@ namespace RouteManagement.Controllers
             IEnumerable<CityViewModel> cities = await CitiesService.Get();
 
             ViewBag.Cities = cities;
+            ViewBag.Services = services;
 
             return View();
         }
@@ -108,7 +122,6 @@ namespace RouteManagement.Controllers
             return View();
         }
 
-
         public async Task<IActionResult> Create()
         {
             var teamsOptionsSelected = Request.Form["checkTeams"].ToList();
@@ -131,7 +144,6 @@ namespace RouteManagement.Controllers
 
             return View();
         }
-
 
     }
 }
