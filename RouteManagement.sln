@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.API", "Teams.API\Team
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteManagement", "RouteManagement\RouteManagement.csproj", "{57C8799A-1815-47B8-B323-7168486BFDFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cities.API", "Cities.API\Cities.API.csproj", "{4B032D42-F570-44B6-AD00-08FA6C03261C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cities.API", "Cities.API\Cities.API.csproj", "{4B032D42-F570-44B6-AD00-08FA6C03261C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutesManagement", "RoutesManagement\RoutesManagement.csproj", "{D6C5AC22-DF75-4B1C-8988-76186F50A1AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{4B032D42-F570-44B6-AD00-08FA6C03261C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B032D42-F570-44B6-AD00-08FA6C03261C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B032D42-F570-44B6-AD00-08FA6C03261C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6C5AC22-DF75-4B1C-8988-76186F50A1AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6C5AC22-DF75-4B1C-8988-76186F50A1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6C5AC22-DF75-4B1C-8988-76186F50A1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6C5AC22-DF75-4B1C-8988-76186F50A1AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,83 @@
+﻿@model RoutesManagement.Models.TeamViewModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<h1>Editar</h1>
+
+<h4>Time</h4>
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="OperatingCity" class="control-label"></label><br />
+				<select asp-for="OperatingCity.Id" asp-items="@(new SelectList(ViewBag.Cities,"Id","CityState"))" class="form-control"></select>
+			</div>
+
+			<div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" checked="checked" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
+                    <span id="statusText">Disponível</span>
+                </label>
+            </div>
+
+			<br />
+
+			<div class="form-group">
+				<label asp-for="People" class="control-label">Pessoas Disponíveis:</label><br />
+				@foreach (var person in ViewBag.PeopleAvailable)
+				{
+					<input name="checkPeopleAvailableToAdd" type="checkbox" value=@person.Id>
+
+					<label for="@person.Name"> @person.Name</label>
+
+					<br />
+				}
+
+				<br />
+
+				<label asp-for="People" class="control-label">Integrantes: (Selecione para remover)</label><br />
+				@foreach (var person in ViewBag.PeopleTeam)
+				{
+					<input name="checkPeopleTeamToRemove" type="checkbox" value=@person.Id />
+
+					<label for="@person.Name"> @person.Name</label>
+
+					<br />
+				}
+			</div>
+			<br />
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index" class="btn btn-light">Voltar</a>
+</div>
+
+<script>
+     function ValidateCheckboxValue() {
+        var result = document.getElementById('checkStatus').checked;
+        
+        document.getElementById('statusText').innerHTML = result ? 'Disponível' : 'Indisponível';
+     }
+</script>
+
+@section Scripts {
+    @{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

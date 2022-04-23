@@ -1,0 +1,95 @@
+﻿@model IEnumerable<RoutesManagement.Models.PersonViewModel>
+
+@{
+	ViewData["Title"] = "Pessoas";
+}
+
+<h1>Pessoas</h1>
+
+<p>
+	<a asp-action="Create" class="btn btn-primary">Nova pessoa</a>
+</p>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsAvailable)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@if (item.IsAvailable == true)
+					{
+						<span>Disponível</span>
+					}
+					else
+					{
+						<span>Indisponível</span>
+					}
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary">Detalhes</a>
+					<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-success">Editar</a>
+					<a asp-action="Delete" asp-route-id="@item.Id" class="openValidateDelete btn btn-outline-danger" data-todo='{"id":"@item.Id","name":"@item.Name","status":"@item.IsAvailable"}' data-toggle="modal" data-target="#modalDeletePerson">Deletar</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+<div class="modal fade" role="dialog" id="modalDeletePerson">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Deletar</h5>
+				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"></span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p id="modalText"></p>
+			</div>
+			<div class="modal-footer">
+				<a asp-action="Delete" class="btn btn-outline-danger" id="confirmDelete">Deletar</a>
+				<button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function ValidateCheckboxValue() {
+	   var result = document.getElementById('checkStatus').checked;
+
+	   document.getElementById('statusText').innerHTML = result ? 'Disponível' : 'Indisponível';
+	}
+
+	$(document).on("click", ".openValidateDelete", function () {
+		var personId = $(this).data('todo').id;
+		var personName = $(this).data('todo').name;
+		var personStatus = $(this).data('todo').status;
+
+		if(personStatus == 'True'){
+			$('#modalText').html(`Deseja realmente deletar <b>${personName}</b>?`);
+			$('#confirmDelete').attr('href', "/People/Delete/" + personId);
+		}
+		else {
+			$('#modalText').html(`<p>Não foi possível deletar.</p> <p><b>${personName}</b> ainda está em um time.</p>`);
+			$('#confirmDelete').hide();
+		}
+	});
+
+</script>
