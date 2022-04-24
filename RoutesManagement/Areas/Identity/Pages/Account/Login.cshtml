@@ -16,17 +16,16 @@
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label>Login:</label><br /><br />
+                    <label>E-mail:</label>
                     <input asp-for="Input.Email" class="form-control border border-secondary" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div><br />
                 <div class="form-group">
-                    <label>Senha:</label><br /><br />
+                    <label>Senha:</label>
                     <input asp-for="Input.Password" class="form-control border border-secondary" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div><br />
                 <div class="form-group">
-                   
                     <div class="checkbox">
                         <label asp-for="Input.RememberMe">
                             <input asp-for="Input.RememberMe" />

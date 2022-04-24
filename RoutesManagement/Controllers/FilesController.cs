@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,22 @@ using RoutesManagement.Services;
 
 namespace RoutesManagement.Controllers
 {
+    [Authorize]
     public class FilesController : Controller
     {
+        private static IWebHostEnvironment _hostEnvironment;
+
         public static List<List<string>> routes = new();
         public static List<string> headers = new();
         public static List<string> services = new();
         public static string serviceName;
         public static string cityId;
+        public static string downloadFile;
+
+        public FilesController(IWebHostEnvironment hostEnvironment)
+        {
+            _hostEnvironment = hostEnvironment;
+        }
 
         public IActionResult Upload()
         {
@@ -140,10 +150,18 @@ namespace RoutesManagement.Controllers
 
             var citySelected = await CitiesService.Get(cityId);
 
-            await GenerateDoc.Write(routes, dataOptionsSelected, teamsSelected, serviceName, citySelected);
+            var filename = await GenerateDoc.Write(routes, dataOptionsSelected, teamsSelected, serviceName, citySelected, _hostEnvironment.WebRootPath);
+
+            downloadFile = $"{_hostEnvironment.WebRootPath}//files//{filename}";
 
             return View();
         }
 
+        public FileContentResult Download()
+        {
+            var fileName = downloadFile.Split("//").ToList();
+            var file = System.IO.File.ReadAllBytes(downloadFile);
+            return File(file, "application/octet-stream", fileName.Last().ToString());
+        }
     }
 }

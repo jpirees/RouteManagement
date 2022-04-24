@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoutesManagement.Models;
 using RoutesManagement.Services;
 
 namespace RoutesManagement.Controllers
 {
+    [Authorize]
     public class CitiesController : Controller
     {
         public async Task<IActionResult> Index()

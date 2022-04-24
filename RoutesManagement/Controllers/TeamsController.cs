@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ using RoutesManagement.Services;
 
 namespace RoutesManagement.Controllers
 {
+    [Authorize]
     public class TeamsController : Controller
     {
         public async Task<IActionResult> Index()
