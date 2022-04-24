@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using RoutesManagement.Models;
 
 namespace RoutesManagement.Services
 {
     public static class GenerateDoc
     {
-        public static async Task Write(List<List<string>> routes, List<string> dataOptionsSelected, List<TeamViewModel> teamsSelected, string seviceSelected, CityViewModel citySelected)
+        public static async Task<string> Write(List<List<string>> routes, List<string> dataOptionsSelected, List<TeamViewModel> teamsSelected, string seviceSelected, CityViewModel citySelected, string rootPath)
         {
             var serviceColumn = routes[0].FindIndex(coluna => coluna == "SERVIÇO");
             var cityColumn = routes[0].FindIndex(coluna => coluna == "CIDADE");
@@ -29,10 +30,16 @@ namespace RoutesManagement.Services
 
             var indexGeneral = 0;
 
-            var user = System.Environment.UserName;
-            var filename = $@"C:\Users\{user}\Desktop\Rota-{seviceSelected}-{citySelected.Name}-{DateTime.Now:dd-MM-yyyy}.docx";
+            var pathFiles = $"{rootPath}//files";
 
-            using (FileStream fileStream = new(filename, FileMode.CreateNew))
+            if (!Directory.Exists(pathFiles))
+                Directory.CreateDirectory(pathFiles);
+
+            var filename = $"Rota-{seviceSelected}-{citySelected.Name}.docx";
+
+            var pathFile = $"{pathFiles}//{filename}";
+
+            using (FileStream fileStream = new(pathFile, FileMode.Create))
             {
                 await using (StreamWriter sw = new(fileStream, Encoding.UTF8))
                 {
@@ -74,6 +81,7 @@ namespace RoutesManagement.Services
                 fileStream.Close();
             }
 
+            return filename;
         }
     }
 }
