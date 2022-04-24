@@ -25,11 +25,19 @@
 			</div>
 
 			<div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" checked="checked" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
-                    <span id="statusText">Disponível</span>
-                </label>
-            </div>
+				<label class="form-check-label">
+					@if (Model.IsAvailable)
+					{
+						<input class="form-check-input" checked="checked" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
+						<span id="statusText">Disponível</span>
+					}
+					else
+					{
+						<input class="form-check-input" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
+						<span id="statusText">Indisponível</span>
+					}
+				</label>
+			</div>
 
 			<br />
 
@@ -57,23 +65,23 @@
 				}
 			</div>
 			<br />
-            <div class="form-group">
-                <input type="submit" value="Salvar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+			<div class="form-group">
+				<input type="submit" value="Salvar" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 <br />
 <div>
-    <a asp-action="Index" class="btn btn-light">Voltar</a>
+	<a asp-action="Index" class="btn btn-light">Voltar</a>
 </div>
 
 <script>
-     function ValidateCheckboxValue() {
-        var result = document.getElementById('checkStatus').checked;
-        
-        document.getElementById('statusText').innerHTML = result ? 'Disponível' : 'Indisponível';
-     }
+	function ValidateCheckboxValue() {
+	   var result = document.getElementById('checkStatus').checked;
+
+	   document.getElementById('statusText').innerHTML = result ? 'Disponível' : 'Indisponível';
+	}
 </script>
 
 @section Scripts {

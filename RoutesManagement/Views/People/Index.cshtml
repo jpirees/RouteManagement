@@ -77,19 +77,22 @@
 	   document.getElementById('statusText').innerHTML = result ? 'Disponível' : 'Indisponível';
 	}
 
-	$(document).on("click", ".openValidateDelete", function () {
-		var personId = $(this).data('todo').id;
-		var personName = $(this).data('todo').name;
-		var personStatus = $(this).data('todo').status;
+	$(document).ready(function() {
+		$(document).on("click", ".openValidateDelete", function () {
+			var personId = $(this).data('todo').id;
+			var personName = $(this).data('todo').name;
+			var personStatus = $(this).data('todo').status;
 
-		if(personStatus == 'True'){
-			$('#modalText').html(`Deseja realmente deletar <b>${personName}</b>?`);
-			$('#confirmDelete').attr('href', "/People/Delete/" + personId);
-		}
-		else {
-			$('#modalText').html(`<p>Não foi possível deletar.</p> <p><b>${personName}</b> ainda está em um time.</p>`);
-			$('#confirmDelete').hide();
-		}
+			if(personStatus == 'True'){
+				$('#modalText').html(`Deseja realmente deletar <b>${personName}</b>?`);
+				$('#confirmDelete').attr('href', "/People/Delete/" + personId);
+				$('#confirmDelete').show();
+			}
+			else {
+				$('#modalText').html(`<p>Não foi possível deletar.</p> <p><b>${personName}</b> está em um time.</p>`);
+				$('#confirmDelete').hide();
+			}
+		});
 	});
 
 </script>

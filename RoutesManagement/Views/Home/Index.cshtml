@@ -4,7 +4,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-	ViewData["Title"] = "Importar Arquivo";
+	ViewData["Title"] = "Rotas";
 
 	@using (Html.BeginForm("UploadFile", "Files", FormMethod.Post, new { enctype = "multipart/form-data" }))
 	{
@@ -12,11 +12,11 @@
 			<h4 class="display-4">Importar Rotas</h4>
 			<br />
 			<div class="form-group">
-				<input class="form-control" type="file" name="file" />
+				<input class="form-control" type="file" name="file" id="fileLoaded" onchange="ValidateFileInput()" />
 			</div>
 			<br />
 			<div class="form-group">
-				<input type="submit" value="Importar" class="btn btn-primary" />
+				<input type="submit" value="Importar" class="btn btn-primary" id="importFile" disabled />
 			</div>
 		</div>
 	}
@@ -28,6 +28,16 @@ else
 	</div>
 }
 
+
+<script>
+	function ValidateFileInput() {
+		var fileLoaded = document.getElementById('fileLoaded').files.length;
+
+		if (fileLoaded == 1) {
+			document.getElementById('importFile').disabled = false;
+		}
+	}
+</script>
 
 @section Scripts {
     @{

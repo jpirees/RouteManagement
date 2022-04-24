@@ -21,35 +21,42 @@
 			<div class="form-group">
 				<label class="control-label"> Times Disponíveis:</label><br />
 
-				@foreach (var team in ViewBag.TeamsAvailable)
+				@if (((IEnumerable<dynamic>)ViewBag.TeamsAvailable).Count() != 0)
 				{
-					<input name="checkTeams" type="checkbox" value=@team.Id id="teamsAvailable" />
-
-					<label for="@team.Name"> @team.Name</label>
+					@foreach (var team in ViewBag.TeamsAvailable)
+					{
+						<input name="checkTeams" type="checkbox" value=@team.Id id="teamsAvailable" />
+						<label for="@team.Name"> @team.Name</label>
+						<br />
+					}
 
 					<br />
+					<div class="form-group">
+						<label class="control-label">Selecione os dados: </label><br />
+
+						@foreach (var item in ViewBag.Headers)
+						{
+							<input name="checkData" type="checkbox" value=@index id="dataOptions" />
+
+							<label for="@item.ToString()"> @item.ToString()</label>
+
+							<br />
+
+							index++;
+						}
+					</div>
+					<br />
+					<div class="form-group">
+						<input type="submit" value="Gerar Documento" class="btn btn-primary" onclick="GenerateDocument()" />
+					</div>
+				}
+				else
+				{
+					<p>Não há times disponíveis na cidade para realizar o serviço selecionado.</p>
 				}
 
 			</div>
-			<br />
-			<div class="form-group">
-				<label class="control-label">Selecione os dados: </label><br />
 
-				@foreach (var item in ViewBag.Headers)
-				{
-					<input name="checkData" type="checkbox" value=@index id="dataOptions" />
-
-					<label for="@item.ToString()"> @item.ToString()</label>
-
-					<br />
-
-					index++;
-				}
-			</div>
-			<br />
-			<div class="form-group">
-				<input type="submit" value="Gerar Documento" class="btn btn-primary" onclick="GenerateDocument()" />
-			</div>
 		</form>
 	</div>
 </div>
