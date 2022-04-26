@@ -14,13 +14,17 @@ namespace RoutesManagement.Models
         [Display(Name = "Status")]
         public bool IsAvailable { get; set; }
 
+        [Display(Name = "Time")]
+        public string Team { get; set; }
+
         public PersonViewModel() { }
 
-        public PersonViewModel(string id, string name, bool isAvailable)
+        public PersonViewModel(string id, string name, bool isAvailable, string team)
         {
             Id = id;
             Name = name;
             IsAvailable = isAvailable;
+            Team = team;
         }
     }
 }

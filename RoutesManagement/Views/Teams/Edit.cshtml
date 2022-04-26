@@ -86,6 +86,10 @@
 
 @section Scripts {
     @{
-	await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	@if(TempData["registerErrorEdit"] != null){
+        <script src="~/js/notifications/registerErrorEdit.js"></script>
+    }
 }

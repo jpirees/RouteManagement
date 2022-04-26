@@ -61,22 +61,39 @@ namespace RoutesManagement.Controllers
                     return RedirectToAction(nameof(Create));
 
                 if (Request.Form["checkPeopleTeam"].ToList().Count == 0)
+                {
+                    TempData["teamFailedCreatePeople"] = "Selecione integrantes para o time";
                     return RedirectToAction(nameof(Create));
+                }
 
                 foreach (var person_id in Request.Form["checkPeopleTeam"].ToList())
                 {
                     var person = await PeopleService.Get(person_id.ToString());
-                    peopleSelected.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable));
+                    peopleSelected.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable, person.Team));
                 }
 
                 team.People = peopleSelected;
                 team.OperatingCity = operatingCity;
 
-                await TeamsService.Create(team);
+                var response = await TeamsService.Create(team);
 
-                return RedirectToAction(nameof(Index));
+                switch ((int)response.StatusCode)
+                {
+                    case 201:
+                        TempData["teamSuccess"] = "Time adicionado com sucesso!";
+                        return RedirectToAction(nameof(Index));
+
+                    case 400:
+                        TempData["teamFailedCreate"] = "Time já cadastrado!";
+                        return RedirectToAction(nameof(Create));
+
+                    default:
+                        TempData["registerError"] = "Falha ao adicionado registro!";
+                        return RedirectToAction(nameof(Index));
+                }
             }
 
+            TempData["registerError"] = "Falha ao adicionado registro!";
             return View(team);
         }
 
@@ -102,7 +119,7 @@ namespace RoutesManagement.Controllers
             List<PersonViewModel> peopleTeam = new();
 
             foreach (var person in team.People)
-                peopleTeam.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable));
+                peopleTeam.Add(new PersonViewModel(person.Id, person.Name, person.IsAvailable, person.Team));
 
             ViewBag.PeopleAvailable = peopleAvailable;
             ViewBag.PeopleTeam = peopleTeam;
@@ -130,15 +147,19 @@ namespace RoutesManagement.Controllers
                     await TeamsService.UpdateInsert(id, person);
                 }
 
-            team = await TeamsService.Get(team.Id);
+            var teamExist = await TeamsService.Get(team.Id);
+
+            if (string.IsNullOrEmpty(teamExist.Name))
+                return View();
+
             team.IsAvailable = teamStatus;
             team.OperatingCity = operatingCity;
 
-
             if (peopleToRemove.Count != 0)
-                if (peopleToRemove.Count == team.People.Count)
+                if (peopleToRemove.Count == teamExist.People.Count)
                 {
                     await TeamsService.Delete(team.Id);
+                    TempData["teamRemoved"] = "Time deletado por falta de integrantes";
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -154,9 +175,13 @@ namespace RoutesManagement.Controllers
             var response = await TeamsService.Update(id, team);
 
             if (response.IsSuccessStatusCode)
+            {
+                TempData["teamSuccessEdit"] = "Dados alterados com sucesso!";
                 return RedirectToAction(nameof(Index));
+            }
 
-            return View(team);
+            TempData["registerErrorEdit"] = "Falha ao alterar dos do time";
+            return RedirectToAction(nameof(Edit));
         }
 
         public async Task<IActionResult> Delete(string id)

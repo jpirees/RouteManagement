@@ -84,6 +84,28 @@
 	</div>
 </div>
 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @if(TempData["registerError"] != null) {
+        <script src="~/js/notifications/registerErrorCreate.js"></script>
+    }
+
+    @if(TempData["teamSuccess"] != null){
+        <script src="~/js/notifications/teamSuccess.js"></script>
+    }
+
+	@if(TempData["teamSuccessEdit"] != null){
+        <script src="~/js/notifications/teamSuccessEdit.js"></script>
+    }
+
+	@if(TempData["teamRemoved"] != null){
+        <script src="~/js/notifications/teamRemoved.js"></script>
+    }
+}
+
 <script>
 	function ValidateCheckboxValue() {
 	   var result = document.getElementById('checkStatus').checked;
@@ -99,3 +121,5 @@
 	});
 
 </script>
+
+

@@ -13,6 +13,10 @@ namespace Models
 		[BsonRequired]
 		[JsonProperty("IsAvailable")]
 		public bool IsAvailable { get; set; }
+
+		[BsonRequired]
+		[JsonProperty("Team")]
+		public string Team { get; set; }
 	}
 
 }

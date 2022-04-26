@@ -1,7 +1,7 @@
 ﻿@model RoutesManagement.Models.PersonViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
 <h1>Editar</h1>
@@ -9,49 +9,67 @@
 <h4>Pessoa</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    @if(Model.IsAvailable){
-                        <input class="form-check-input" checked="checked" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
-                        <span id="statusText">Disponível</span>
-                    }
-                    else
-                    {
-                        <input class="form-check-input" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
-                        <span id="statusText">Indisponível</span>
-                    }
-                </label>
-            </div>
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Salvar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group">
+				<label asp-for="Team" class="control-label"></label>
+				<input asp-for="Team" class="form-control" value=@(@Model.Team ?? "Sem Time") disabled="disabled" />
+				<span asp-validation-for="Team" class="text-danger"></span>
+			</div>
+			<br />
+
+			<div class="form-group form-check">
+				<label class="form-check-label">
+					@if (Model.IsAvailable)
+					{
+						<input class="form-check-input" checked="checked" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
+						<span id="statusText">Disponível</span>
+					}
+					else
+					{
+						<input class="form-check-input" asp-for="IsAvailable" id="checkStatus" onclick="ValidateCheckboxValue()" />
+						<span id="statusText">Indisponível</span>
+					}
+				</label>
+			</div>
+			<br />
+			<div class="form-group">
+				<input type="submit" value="Salvar" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 <br />
 <div>
-    <a asp-action="Index" class="btn btn-light">Voltar</a>
+	<a asp-action="Index" class="btn btn-light">Voltar</a>
 </div>
 
 <script>
-     function ValidateCheckboxValue() {
-        var result = document.getElementById('checkStatus').checked;
-        
-        document.getElementById('statusText').innerHTML = result ? 'Disponível' : 'Indisponível';
-     }
+	function ValidateCheckboxValue() {
+	   var result = document.getElementById('checkStatus').checked;
+
+	   document.getElementById('statusText').innerHTML = result ? 'Disponível' : 'Indisponível';
+	}
 </script>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 
+	@if(TempData["registerErrorEdit"] != null) {
+        <script src="~/js/notifications/registerErrorEdit.js"></script>
+    }
+
+    @if(TempData["personSuccessEdit"] != null){
+        <script src="~/js/notifications/personSuccessEdit.js"></script>
+    }
 }
 

@@ -19,10 +19,11 @@
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 			<div class="form-group">
-				<label class="control-label"> Times Disponíveis:</label><br />
-
 				@if (((IEnumerable<dynamic>)ViewBag.TeamsAvailable).Count() != 0)
 				{
+					<label class="control-label"> Times Disponíveis:</label>
+
+					<br />
 					@foreach (var team in ViewBag.TeamsAvailable)
 					{
 						<input name="checkTeams" type="checkbox" value=@team.Id id="teamsAvailable" />

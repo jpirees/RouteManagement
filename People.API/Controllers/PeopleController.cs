@@ -89,6 +89,21 @@ namespace People.API.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id:length(24)}/Team")]
+        public async Task<dynamic> UpdateTeam(string id, string team = null)
+        {
+            var person = await _peopleService.UpdateTeam(id, team);
+
+            if (person == null)
+                return NotFound(new
+                {
+                    statusCode = 404,
+                    message = "Person not found"
+                });
+
+            return NoContent();
+        }
+
 
         [HttpDelete("{id:length(24)}")]
         public async Task<dynamic> Delete(string id)

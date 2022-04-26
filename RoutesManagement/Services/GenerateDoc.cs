@@ -39,9 +39,9 @@ namespace RoutesManagement.Services
 
             var pathFile = $"{pathFiles}//{filename}";
 
-            using (FileStream fileStream = new(pathFile, FileMode.Create))
+            await using (FileStream fileStream = new(pathFile, FileMode.Create))
             {
-                await using (StreamWriter sw = new(fileStream, Encoding.UTF8))
+                using (StreamWriter sw = new(fileStream, Encoding.UTF8))
                 {
                     sw.WriteLine($"{seviceSelected} - {DateTime.Now:dd/MM/yyyy}\n{citySelected.Name}\n\n");
 

@@ -43,11 +43,21 @@ namespace RoutesManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                await PeopleService.Create(person);
+                var response = await PeopleService.Create(person);
 
-                return RedirectToAction(nameof(Index));
+                switch ((int)response.StatusCode)
+                {
+                    case 201:
+                        TempData["personSuccess"] = "Pessoa adicionada com sucesso!";
+                        return View(person);
+
+                    default:
+                        TempData["registerError"] = "Falha ao tentar adicionar uma pessoa!";
+                        return View(person);
+                }
             }
 
+            TempData["registerError"] = "Falha ao tentar adicionar uma pessoa!";
             return View(person);
         }
 
@@ -62,17 +72,26 @@ namespace RoutesManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,IsAvailable")] PersonViewModel person)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,IsAvailable,Team")] PersonViewModel person)
         {
-            if (!id.Equals(person.Id))
-                return RedirectToAction(nameof(Index));
+            if (!person.IsAvailable)
+            {
+                var personTeam = await PeopleService.Get(person.Id);
+                person.Team = personTeam.Team;
+            }
 
             var response = await PeopleService.Update(id, person);
 
-            if (response.IsSuccessStatusCode)
-                return RedirectToAction(nameof(Index));
+            switch ((int)response.StatusCode)
+            {
+                case 204:
+                    TempData["personSuccessEdit"] = "Os dados foram alterados com sucesso!";
+                    return View(person);
 
-            return View(person);
+                default:
+                    TempData["registerErrorEdit"] = "Falha ao tentar editar dados da pessoa!";
+                    return View(person);
+            }
         }
 
         public async Task<IActionResult> Delete(string id)

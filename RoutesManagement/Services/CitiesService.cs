@@ -87,7 +87,7 @@ namespace RoutesManagement.Services
             return city;
         }
 
-        public static async Task Create(CityViewModel city)
+        public static async Task<HttpResponseMessage> Create(CityViewModel city)
         {
             using (var httpClient = new HttpClient())
             {
@@ -96,7 +96,7 @@ namespace RoutesManagement.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
 
-                await httpClient.PostAsJsonAsync("Cities", city);
+                return await httpClient.PostAsJsonAsync("Cities", city);
             }
         }
 

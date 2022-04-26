@@ -28,5 +28,25 @@ namespace Teams.API.Services
             }
         }
 
+        public static async Task UpdateTeam(string id, string team = null)
+        {
+            HttpClient httpClient = new();
+
+            try
+            {
+                if (httpClient.BaseAddress == null) httpClient.BaseAddress = new Uri("https://localhost:44383/");
+
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await httpClient.PutAsync($"api/People/{id}/Team?team={team}", null);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+        }
+
     }
 }

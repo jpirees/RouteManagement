@@ -50,7 +50,15 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    
     }
+
+    @if(TempData["registerError"] != null) {
+        <script src="~/js/notifications/registerErrorCreate.js"></script>
+    }
+
+    @if(TempData["personSuccess"] != null){
+        <script src="~/js/notifications/personSuccess.js"></script>
+    }
+
 }
 

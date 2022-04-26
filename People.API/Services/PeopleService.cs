@@ -29,7 +29,7 @@ namespace People.API.Services
 
         public async Task<IEnumerable<Person>> GetByName(string name) =>
             await _people.Find(person => person.Name.ToLower().Contains(name.ToLower()))
-                         .SortBy(person => person.Name)
+                         .SortBy(person => person.Name.ToLower())
                          .ToListAsync<Person>();
 
         public async Task<Person> Create(Person person)
@@ -58,6 +58,20 @@ namespace People.API.Services
                 return null;
 
             person.IsAvailable = !person.IsAvailable;
+
+            await _people.ReplaceOneAsync<Person>(person => person.Id == id, person);
+
+            return person;
+        }
+
+        public async Task<Person> UpdateTeam(string id, string team)
+        {
+            var person = await GetById(id);
+
+            if (person == null)
+                return null;
+
+            person.Team = team;
 
             await _people.ReplaceOneAsync<Person>(person => person.Id == id, person);
 

@@ -159,9 +159,9 @@ namespace RoutesManagement.Controllers
 
         public FileContentResult Download()
         {
-            var fileName = downloadFile.Split("//").ToList();
+            var fileName = downloadFile.Split("//").ToList().Last().ToString();
             var file = System.IO.File.ReadAllBytes(downloadFile);
-            return File(file, "application/octet-stream", fileName.Last().ToString());
+            return File(file, "application/octet-stream", fileName);
         }
     }
 }

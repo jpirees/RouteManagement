@@ -88,7 +88,7 @@ namespace RoutesManagement.Services
             return teams;
         }
 
-        public static async Task Create(TeamViewModel team)
+        public static async Task<HttpResponseMessage> Create(TeamViewModel team)
         {
             using (var httpClient = new HttpClient())
             {
@@ -97,7 +97,7 @@ namespace RoutesManagement.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
 
-                await httpClient.PostAsJsonAsync("Teams", team);
+                return await httpClient.PostAsJsonAsync("Teams", team);
             }
         }
 

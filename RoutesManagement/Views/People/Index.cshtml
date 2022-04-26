@@ -19,7 +19,9 @@
 			<th>
 				@Html.DisplayNameFor(model => model.IsAvailable)
 			</th>
-			<th></th>
+			<th>
+				@Html.DisplayNameFor(model => model.Team)
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -37,6 +39,16 @@
 					else
 					{
 						<span>Indisponível</span>
+					}
+				</td>
+				<td>
+					@if (item.Team == null)
+					{
+						<span>Sem Time</span>
+					}
+					else
+					{
+						@Html.DisplayFor(modelItem => item.Team)
 					}
 				</td>
 				<td>

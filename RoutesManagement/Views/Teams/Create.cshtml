@@ -67,5 +67,13 @@
     @{
 	await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+
+	@if(TempData["teamFailedCreatePeople"] != null) {
+		<script src="~/js/notifications/teamFailedCreatePeople.js"></script>
+	}
+
+	@if(TempData["teamFailedCreate"] != null) {
+		<script src="~/js/notifications/teamFailedCreate.js"></script>
+	}
 }
 

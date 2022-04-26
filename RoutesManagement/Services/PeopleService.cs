@@ -64,7 +64,7 @@ namespace RoutesManagement.Services
             return people;
         }
         
-        public static async Task Create(PersonViewModel person)
+        public static async Task<HttpResponseMessage> Create(PersonViewModel person)
         {
             using (var httpClient = new HttpClient())
             {
@@ -73,7 +73,7 @@ namespace RoutesManagement.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
 
-                await httpClient.PostAsJsonAsync("People", person);
+                return await httpClient.PostAsJsonAsync("People", person);
             }
         }
 

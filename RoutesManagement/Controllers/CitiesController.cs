@@ -40,16 +40,33 @@ namespace RoutesManagement.Controllers
                 var cityExist = await CitiesService.GetByName(city.Name.ToUpper());
 
                 if (cityExist.Id != null)
+                {
+                    TempData["cityFailedCreate"] = "Cidade já cadastrada!";
                     return View(city);
+                }
 
                 city.Name = city.Name.ToUpper().Trim();
                 city.State = city.State.ToUpper().Trim();
 
-                await CitiesService.Create(city);
+                var response = await CitiesService.Create(city);
 
-                return RedirectToAction(nameof(Index));
+                switch ((int)response.StatusCode)
+                {
+                    case 201:
+                        TempData["citySuccess"] = "Cidade adicionada com sucesso!";
+                        return View(city);
+
+                    case 400:
+                        TempData["cityFailedCreate"] = "Cidade já cadastrada!";
+                        return View(city);
+
+                    default:
+                        TempData["registerError"] = "Falha ao tentar adicionar uma cidade!";
+                        return View(city);
+                }
             }
 
+            TempData["registerError"] = "Falha ao tentar adicionar uma cidade!";
             return View(city);
         }
 
