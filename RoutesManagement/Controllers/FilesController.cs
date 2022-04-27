@@ -55,7 +55,7 @@ namespace RoutesManagement.Controllers
                 int columnCep = 0;
                 int columnService = 0;
 
-                for (var column = 1; column < columnCount; column++)
+                for (var column = 1; column <= columnCount; column++)
                 {
                     headersFromExcel.Add(worksheet.Cells[1, column].Value.ToString());
 
@@ -76,7 +76,7 @@ namespace RoutesManagement.Controllers
                 {
                     List<string> rowContent = new();
 
-                    for (var column = 1; column < columnCount; column++)
+                    for (var column = 1; column <= columnCount; column++)
                     {
                         servicesRaw.Add(worksheet.Cells[row, columnService].Value.ToString().ToUpper());
 
