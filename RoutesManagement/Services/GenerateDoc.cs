@@ -10,11 +10,11 @@ namespace RoutesManagement.Services
 {
     public static class GenerateDoc
     {
-        public static async Task<string> Write(List<List<string>> routes, List<string> dataOptionsSelected, List<TeamViewModel> teamsSelected, string seviceSelected, CityViewModel citySelected, string rootPath)
+        public static async Task<string> Write(List<List<string>> routes, List<string> dataOptionsSelected, List<TeamViewModel> teamsSelected, string serviceSelected, CityViewModel citySelected, string rootPath)
         {
-            var serviceColumn = routes[0].FindIndex(coluna => coluna == "SERVIÇO");
-            var cityColumn = routes[0].FindIndex(coluna => coluna == "CIDADE");
-            var cepColumn = routes[0].FindIndex(coluna => coluna == "CEP");
+            var serviceColumn = routes[0].FindIndex(column => column == "SERVIÇO");
+            var cityColumn = routes[0].FindIndex(column => column == "CIDADE");
+            var cepColumn = routes[0].FindIndex(column => column == "CEP");
 
             var routesCount = routes.Count;
             var allColumns = routes[0];
@@ -22,7 +22,7 @@ namespace RoutesManagement.Services
             for (var i = 0; i < routesCount; i++)
             {
                 routes.Remove(routes.Find(route => route[cityColumn].ToUpper() != citySelected.Name.ToUpper()));
-                routes.Remove(routes.Find(route => route[serviceColumn].ToUpper() != seviceSelected.ToUpper()));
+                routes.Remove(routes.Find(route => route[serviceColumn].ToUpper() != serviceSelected.ToUpper()));
             }
 
             var division = routes.Count / teamsSelected.Count;
@@ -35,7 +35,7 @@ namespace RoutesManagement.Services
             if (!Directory.Exists(pathFiles))
                 Directory.CreateDirectory(pathFiles);
 
-            var filename = $"Rota-{seviceSelected}-{citySelected.Name}.docx";
+            var filename = $"Rota-{serviceSelected}-{citySelected.Name}.docx";
 
             var pathFile = $"{pathFiles}//{filename}";
 
@@ -43,7 +43,7 @@ namespace RoutesManagement.Services
             {
                 using (StreamWriter sw = new(fileStream, Encoding.UTF8))
                 {
-                    sw.WriteLine($"{seviceSelected} - {DateTime.Now:dd/MM/yyyy}\n{citySelected.Name}\n\n");
+                    sw.WriteLine($"{serviceSelected} - {DateTime.Now:dd/MM/yyyy}\n{citySelected.Name}\n\n");
 
                     foreach (var team in teamsSelected)
                     {
