@@ -17,9 +17,11 @@
 <li>
   Tenha um servidor rodando MongoDB na porta padrão para utilização.
 <li>
-  Selecione  o projeto "RoutesManagement" e rode o seguinte comando ("update-database") no console de gerenciamento de pacotes para criar o banco de dados SQL, que será utilizado para realizar autenticação.
+  Selecione  o projeto "RoutesManagement" e rode o comando <b>update-database</b> no console de gerenciamento de pacotes para criar o banco de dados SQL, que será utilizado para realizar autenticação.
 <li>
-  Para que o sistema funcione corretamente cadastre na seguinte ordem: Pessoas => Cidades => Times
+  Para criar um usuário que é capaz de criar outros usuários (administrador), utilize o email "admin@mail.com" (só pode haver um administrador na plataforma).
+<li>
+  Depois que efetuar o Login (entrar na plataforma). Para que o sistema funcione corretamente cadastre na seguinte ordem: Pessoas => Cidades => Times.
   
   
 <h2>
