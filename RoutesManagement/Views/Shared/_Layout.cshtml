@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" />
 
-	<script src="~/js/jquery-3.2.1.slim.min.js" ></script>
+	<script src="~/js/jquery-3.2.1.slim.min.js"></script>
 	<script src="~/js/popper.min.js"> </script>
 	<script src="~/js/bootstrap.min.js"></script>
 </head>
@@ -29,21 +29,24 @@
 
 						@if (SignInManager.IsSignedIn(User))
 						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="People" asp-action="Index">Pessoas</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Teams" asp-action="Index">Times</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Cities" asp-action="Index">Cidades</a>
+							</li>
+							@if (User.Identity.Name == "admin@mail.com")
+							{
 								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="" asp-controller="People" asp-action="Index">Pessoas</a>
+									<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Novo Usuário</a>
 								</li>
-								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="" asp-controller="Teams" asp-action="Index">Times</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="" asp-controller="Cities" asp-action="Index">Cidades</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Usuários</a>
-								</li>
+							}
 						}
 					</ul>
-						<partial name="_LoginPartial" />
+					<partial name="_LoginPartial" />
 				</div>
 			</div>
 		</nav>
